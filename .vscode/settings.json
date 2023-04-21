@@ -1,6 +1,7 @@
 {
     "cmake.configureOnOpen": true,
     "files.associations": {
-        "llhttp.h": "c"
+        "llhttp.h": "c",
+        "iostream": "cpp"
     }
 }
