@@ -26,27 +26,11 @@ class Header {
   public:
   Header() = default;
   ~Header() = default;
-  Header(const Header & rhs) : headers(rhs.headers) {}
-
-  Header(Header && rhs) noexcept : headers(std::move(rhs.headers)) {}
-
-  Header & operator=(const Header & rhs) const {
-    if (this != & rhs) {
-      this->headers = rhs.headers;
-    }
-
-    return *this;
-  }
-
-  Header & operator=(const Header && rhs) noexcept {
-    if (this != &rhs) {
-      this->headers = std::move(rhs.headers);
-    }
-    
-    return *this;
-  }
-
-  bool operator==(Header & rhs) const {
+  Header(const Header & rhs) = default;
+  Header(Header && rhs) noexcept = default;
+  Header & operator=(const Header & rhs) = default;
+  Header & operator=(Header && rhs) noexcept = default;
+  bool operator==(Header & rhs) {
     return this->headers == rhs.headers;
   }
 
