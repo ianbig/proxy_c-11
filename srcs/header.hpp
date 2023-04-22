@@ -18,10 +18,12 @@ class FieldNotFoundException: public std::exception {
   }
 };
 
+
 template<typename K, typename V>
 class Header {
   private:
   using HashMap = std::unordered_map<K, V>;
+  using Iterator = typename std::unordered_map<K, V>::iterator;
   HashMap headers;
   public:
   Header() = default;
@@ -48,6 +50,14 @@ class Header {
     }
 
     return headers[field];
+  }
+
+  Iterator begin() {
+    return headers.begin();
+  }
+
+  Iterator end() {
+    return headers.end();
   }
 };
 

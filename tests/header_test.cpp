@@ -41,4 +41,10 @@ int main() {
   } catch (FieldNotFoundException<std::string> & e) {
     std::cout << "Move Assignment passed" << std::endl;
   }
+
+  for (auto it = headers_moved.begin(); it != headers_moved.end(); it++) {
+    assert(it->first == "Host");
+    assert(it->second == "www.linkedin.com");
+  }
+  std::cout << "Iterator passed" << std::endl;
 }

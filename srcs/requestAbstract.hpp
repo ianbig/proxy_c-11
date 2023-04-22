@@ -3,17 +3,14 @@
 
 #include <string>
 #include "header.hpp"
+#include "messageInterface.hpp"
 
-template <typename T>
-class requestAbstract {
+class requestAbstract : public messageInterface {
   private:
-  Header<std::string, T> headers;
+  Header<std::string, std::string> headers;
   public:
-  virtual std::string getMessage() = 0;
-  virtual int setHeader(std::string key, T val) = 0;
-  virtual Header<string, T> getHeader() = 0;
-  size_t getContentLength();
-  virtual std::string getMethod() = 0;
+  virtual std::string getMessage() override;
+  
 };
 
 #endif
