@@ -1,9 +1,9 @@
 #ifndef __postRequest_hpp__
 #define __postRequest_hpp__
 
-#include "requestAbstract.hpp"
+#include "messageAbstract.hpp"
 
-class postRequest : requestAbstract {
+class postRequest : messageAbstract {
   std::string body;
   public:
   postRequest();

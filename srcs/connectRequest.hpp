@@ -1,9 +1,9 @@
 #ifndef __connectRequest_hpp__
 #define __connectRequest_hpp__
 
-#include "requestAbstract.hpp"
+#include "messageAbstract.hpp"
 
-class connectRequest: public requestAbstract {
+class connectRequest: public messageAbstract {
   public:
   connectRequest();
   connectRequest(const connectRequest & rhs) = default;

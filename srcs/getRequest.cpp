@@ -2,6 +2,6 @@
 #include "httpInfo.hpp"
 
 
-getRequest::getRequest() : requestAbstract(HTTP_METHOD::HTTP_GET) {
+getRequest::getRequest() : messageAbstract(HTTP_METHOD::HTTP_GET) {
 
 }

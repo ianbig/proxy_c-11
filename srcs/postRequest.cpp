@@ -2,7 +2,7 @@
 #include "httpInfo.hpp"
 
 
-postRequest::postRequest() : requestAbstract(HTTP_METHOD::HTTP_POST) {
+postRequest::postRequest() : messageAbstract(HTTP_METHOD::HTTP_POST) {
 
 }
 

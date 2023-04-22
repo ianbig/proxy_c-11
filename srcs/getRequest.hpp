@@ -2,9 +2,9 @@
 #define __getRequest_hpp__
 
 
-#include "requestAbstract.hpp"
+#include "messageAbstract.hpp"
 
-class getRequest: public requestAbstract {
+class getRequest: public messageAbstract {
   public:
   getRequest();
   getRequest(const getRequest & rhs) = default;

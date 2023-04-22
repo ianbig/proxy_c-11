@@ -14,7 +14,7 @@ all: $(TEST_TARGETS)
 	echo "complete code compliation"
 header_test: $(SRCS_DIR)/header.hpp $(TESTS_DIR)/header_test.cpp
 	$(CXX) -o $@ $(CFLAGS) $(TESTS_DIR)/header_test.cpp
-request_test: $(SRCS_DIR)/header.hpp $(SRCS_DIR)/messageInterface.hpp $(OBJS) $(TESTS_DIR)/request_test.cpp
+request_test: $(SRCS_DIR)/header.hpp $(OBJS) $(TESTS_DIR)/request_test.cpp
 	$(CXX) -o $@ $(CFLAGS) $(TESTS_DIR)/request_test.cpp $(OBJS)
 %.o: $(SRCS_DIR)/%.cpp $(SRCS_DIR)/%.hpp
 	$(CXX) $(CFLAGS) -c $<
