@@ -3,7 +3,8 @@ CFLAGS = --std=c++14
 SRCS_DIR = $(PWD)/srcs
 TESTS_DIR = $(PWD)/tests
 
-OBJS = requestAbstract.o getRequest.o
+SRCS = $(wildcard $(SRCS_DIR)/*.cpp)
+OBJS = $(patsubst %.cpp, %.o, $(SRCS))
 
 TEST_TARGETS = header_test request_test
 

@@ -1,8 +1,11 @@
 #include <string>
 #include <iostream>
 #include "assert.h"
+#include <cstring>
 
 #include "../srcs/getRequest.hpp"
+#include "../srcs/postRequest.hpp"
+#include "../srcs/connectRequest.hpp"
 
 int main() {
   getRequest g;
@@ -43,4 +46,12 @@ int main() {
   assert(g4.getHeader().get("User-Agent") == "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0");
   std::cout << "Class getRequest Move operator= passed" << std::endl;
 
+  postRequest p;
+  p.setBody("Ian is handsome");
+  assert(strncmp(p.getBody(), "Ian is handsome", 16) == 0);
+  std::cout << "Class postRequest getBody() and setBody() passed" << std::endl;
+
+
+  connectRequest c;
+  std::cout << "Class connectRequest passed" << std::endl;
 }
