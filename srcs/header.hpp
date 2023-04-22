@@ -36,12 +36,8 @@ class Header {
     return this->headers == rhs.headers;
   }
 
-  int set(K field, V val) {
-    if (headers.find(field) == headers.end()) {
-      headers[field] = val;
-    }
-
-    return 0; // means success
+  void set(K field, V val) {
+    headers[field] = val;
   }
 
   V get(K field) {

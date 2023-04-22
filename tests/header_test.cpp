@@ -47,4 +47,8 @@ int main() {
     assert(it->second == "www.linkedin.com");
   }
   std::cout << "Iterator passed" << std::endl;
+
+  headers_moved.set("Host", "www.google.com");
+  assert(headers_moved.get("Host") == "www.google.com");
+  std::cout << "Duplicate set method passed!" << std::endl;
 }
