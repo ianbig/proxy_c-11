@@ -4,29 +4,38 @@
 #include "HttpParser.hpp"
 #include "response.hpp"
 
-Message* HttpParser::parse(std::string http_msg) {
-  Message* toRet = this->parseStartLine(http_msg);
+MessageUniquePtr HttpParser::parseRequest(std::string http_msg) {
+  MessageUniquePtr toRet = this->parseRequestStartLine(http_msg);
     // this->parseHeader(toRet, http_msg);
     // this->parseBody(toRet, http_msg);
 
   return toRet;
 }
 
-Message* HttpParser::parseStartLine(std::string http_msg) {
+MessageUniquePtr HttpParser::parseRequestStartLine(std::string http_msg) {
   size_t end = http_msg.find("\r\n");
   std::string firstLine = http_msg.substr(0, end);
 
-  if (isResponse(firstLine)) {
-      Response * msg = new Response();
-      int code = extractedCode(firstLine);
-      msg->setStatusCode(code);
-      return msg;
-  } else if (!isValidHttpFormat(firstLine)) {
-    throw InvalidHTTPFormat("Invalid start Line");
+  if (!isValidHttpFormat(firstLine) || isResponse(firstLine)) {
+      throw InvalidHTTPFormat("Invalid HTTP Request Format");
   }
 
-  Message * msg = new Message();
+  MessageUniquePtr msg = std::make_unique<Message>();
   msg->setHeader("Method", extractMethod(firstLine));
+  return msg;
+}
+
+ResponseUniquePtr HttpParser::parserResponse(std::string http_msg) {
+  size_t end = http_msg.find("\r\n");
+  std::string firstLine = http_msg.substr(0, end);
+
+  if(!isValidHttpFormat(firstLine) || !isResponse(firstLine)) {
+    throw InvalidHTTPFormat("Invalid HTTP Response");
+  }
+
+  ResponseUniquePtr msg = std::make_unique<Response>();
+  int code = extractedCode(firstLine);
+  msg->setStatusCode(code);
   return msg;
 }
 

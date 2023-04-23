@@ -1,3 +1,5 @@
+#include <iostream>
+#include <memory>
 #include <cstring>
 #include <assert.h>
 
@@ -21,7 +23,7 @@ int main() {
     username=johndoe&password=1234\r\n";
 
   HttpParser parser;
-  Message * m = parser.parse(http_request);
+  MessageUniquePtr m = std::move(parser.parseRequest(http_request));
 
   // TOOD: do some assertion here
   assert(strncmp(m->getHeader().get("Method").c_str(), "POST", 5) == 0);
@@ -47,8 +49,8 @@ int main() {
     </body>\
     </html>\r\n";
 
-  Response * m2 = (Response *)parser.parse(http_response);
+  ResponseUniquePtr request = std::move(parser.parserResponse(http_response));
   // TODO: do some assertion here
-  assert(m2->getStatusCode() == HTTP_STATUS::HTTP_OK);
+  assert(request->getStatusCode() == HTTP_STATUS::HTTP_OK);
   std::cout << "response parsed success!!" << std::endl;
 }

@@ -7,6 +7,7 @@
 #include <memory>
 #include <exception>
 #include "message.hpp"
+#include "response.hpp"
 
 
 class InvalidHTTPFormat: public std::exception {
@@ -16,10 +17,12 @@ class InvalidHTTPFormat: public std::exception {
 };
 
 using MessageUniquePtr = std::unique_ptr<Message>;
+using ResponseUniquePtr = std::unique_ptr<Response>;
 
 class HttpParser {
   private:
-  Message* parseStartLine(std::string http_msg);
+  MessageUniquePtr parseRequestStartLine(std::string http_msg);
+  ResponseUniquePtr parserResponseStartLine(std::string http_msg);
   bool isResponse(std::string firstLine);
   bool isRequest(std::string method);
   int extractedCode(std::string firstLine);
@@ -28,7 +31,8 @@ class HttpParser {
   void parseHeader(Message * msg, std::string http_msg);
   // void parseBody(MessageUniquePtr & msg, std::string http_msg);
   public:
-  Message* parse(std::string http_msg);
+  MessageUniquePtr parseRequest(std::string http_msg);
+  ResponseUniquePtr parserResponse(std::string http_msg);
 };
 
 #endif
