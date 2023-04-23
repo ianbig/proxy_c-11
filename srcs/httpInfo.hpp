@@ -7,4 +7,9 @@ enum class HTTP_METHOD {
   HTTP_CONNECT
 };
 
+enum class HTTP_STATUS {
+  HTTP_OK = 200,
+  HTTP_NOT_FOUND = 404
+};
+
 #endif

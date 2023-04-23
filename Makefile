@@ -6,7 +6,7 @@ TESTS_DIR = $(PWD)/tests
 SRCS = $(wildcard $(SRCS_DIR)/*.cpp)
 OBJS = $(patsubst %.cpp, %.o, $(SRCS))
 
-TEST_TARGETS = header_test request_test
+TEST_TARGETS = header_test request_test response_test
 
 .PHONY: all clean
 
@@ -16,6 +16,8 @@ header_test: $(SRCS_DIR)/header.hpp $(TESTS_DIR)/header_test.cpp
 	$(CXX) -o $@ $(CFLAGS) $(TESTS_DIR)/header_test.cpp
 request_test: $(SRCS_DIR)/header.hpp $(OBJS) $(TESTS_DIR)/request_test.cpp
 	$(CXX) -o $@ $(CFLAGS) $(TESTS_DIR)/request_test.cpp $(OBJS)
+response_test: $(SRCS_DIR)/header.hpp $(OBJS) $(TESTS_DIR)/response_test.cpp
+	$(CXX) -o $@ $(CFLAGS) $(TESTS_DIR)/response_test.cpp $(OBJS)
 %.o: $(SRCS_DIR)/%.cpp $(SRCS_DIR)/%.hpp
 	$(CXX) $(CFLAGS) -c $<
 
