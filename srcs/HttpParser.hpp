@@ -10,29 +10,32 @@
 #include "response.hpp"
 
 
+const char * getNextAlphabetInStr(const char * str);
+
 class InvalidHTTPFormat: public std::exception {
   std::string msg;
   public:
   InvalidHTTPFormat(std::string msg);
 };
 
-using MessageUniquePtr = std::unique_ptr<Message>;
-using ResponseUniquePtr = std::unique_ptr<Response>;
+using MessagePtr = std::shared_ptr<Message>;
+using ResponsePtr = std::shared_ptr<Response>;
 
 class HttpParser {
   private:
-  MessageUniquePtr parseRequestStartLine(std::string http_msg);
-  ResponseUniquePtr parserResponseStartLine(std::string http_msg);
+  MessagePtr parseRequestStartLine(std::string http_msg);
+  ResponsePtr parseResponseStartLine(std::string http_msg);
   bool isResponse(std::string firstLine);
   bool isRequest(std::string method);
   int extractedCode(std::string firstLine);
   std::string extractMethod(std::string firstLine);
   bool isValidHttpFormat(std::string firstLine);
-  void parseHeader(Message * msg, std::string http_msg);
+  void parseHeader(MessagePtr msg, std::string http_msg);
+  std::string extractHeader(std::string msg);
   // void parseBody(MessageUniquePtr & msg, std::string http_msg);
   public:
-  MessageUniquePtr parseRequest(std::string http_msg);
-  ResponseUniquePtr parserResponse(std::string http_msg);
+  MessagePtr parseRequest(std::string http_msg);
+  ResponsePtr parseResponse(std::string http_msg);
 };
 
 #endif
