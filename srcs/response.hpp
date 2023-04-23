@@ -20,7 +20,7 @@ class Response : public Message {
   Response& operator=(Response && rhs) = default;
 
   void setBody(const char * _body);
-  void setStatusCode(HTTP_STATUS status);
+  void setStatusCode(int statusCode);
   const char * getBody();
   HTTP_STATUS getStatusCode();
 };

@@ -3,6 +3,8 @@
 
 #include "../srcs/HttpParser.hpp"
 #include "../srcs/message.hpp"
+#include "../srcs/response.hpp"
+
 
 int main() {
   const char * http_request = "POST /login.php HTTP/1.1\r\n\
@@ -19,10 +21,12 @@ int main() {
     username=johndoe&password=1234\r\n";
 
   HttpParser parser;
-  Message m = parser.parse(http_request);
+  Message * m = parser.parse(http_request);
 
   // TOOD: do some assertion here
-  assert(strncmp(m.getHeader().get("Method").c_str(), "POST", 5) == 0);
+  assert(strncmp(m->getHeader().get("Method").c_str(), "POST", 5) == 0);
+  std::cout << "request parsed success!!" << std::endl;
+
   const char * http_response = "HTTP/1.1 200 OK\r\n\
     Date: Fri, 22 Apr 2023 15:30:00 GMT\r\n\
     Server: Apache/2.4.18 (Ubuntu)\r\n\
@@ -43,6 +47,8 @@ int main() {
     </body>\
     </html>\r\n";
 
-  Message m2 = parser.parse(http_response);
+  Response * m2 = (Response *)parser.parse(http_response);
   // TODO: do some assertion here
+  assert(m2->getStatusCode() == HTTP_STATUS::HTTP_OK);
+  std::cout << "response parsed success!!" << std::endl;
 }

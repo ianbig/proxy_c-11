@@ -13,6 +13,6 @@ void Response::setBody(const char * _body) {
   this->body = _body;
 }
 
-void Response::setStatusCode(HTTP_STATUS status) {
-  statusCode = status;
+void Response::setStatusCode(int status) {
+  statusCode = (HTTP_STATUS)status;
 }

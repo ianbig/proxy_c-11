@@ -7,7 +7,7 @@
 
 int main() {
   Response r;
-  r.setStatusCode(HTTP_STATUS::HTTP_OK);
+  r.setStatusCode(200);
   r.setBody("Ian is handsome");
 
 
