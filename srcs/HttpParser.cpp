@@ -9,8 +9,8 @@
 MessagePtr HttpParser::parseRequest(std::string http_msg) {
   MessagePtr toRet = this->parseRequestStartLine(http_msg);
   this->parseHeader(toRet, http_msg);
-    // this->parseBody(toRet, http_msg);
-
+  this->parseBody(toRet, http_msg);
+  
   return toRet;
 }
 
@@ -30,6 +30,7 @@ MessagePtr HttpParser::parseRequestStartLine(std::string http_msg) {
 ResponsePtr HttpParser::parseResponse(std::string http_msg) {
   ResponsePtr response = this->parseResponseStartLine(http_msg);
   this->parseHeader(response, http_msg);
+  this->parseBody(response, http_msg);
   return response;
 }
 
@@ -123,9 +124,15 @@ std::string HttpParser::extractHeader(std::string http_msg) {
   return header;
 }
 
-// void HttpParser::parseBody(Message & msg, std::string http_msg) {
-
-// }
+void HttpParser::parseBody(MessagePtr msg, std::string http_msg) {
+  const char * http_msg_cstr = http_msg.c_str();
+  const char * start = strstr(http_msg_cstr, "\r\n\r\n");
+  if (start == NULL) { return; }
+  start += strlen("\r\n\r\n");
+  const char *end = strstr(start, "\r\n");
+  std::string body(start, end - start);
+  msg->setBody(body);
+}
 
 
 InvalidHTTPFormat::InvalidHTTPFormat(std::string _msg) : msg(_msg) {

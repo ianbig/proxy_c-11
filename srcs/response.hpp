@@ -9,7 +9,6 @@
 class Response : public Message {
   protected:
   HTTP_STATUS statusCode;
-  std::string body;
   public:
   Response() = default;
   Response(const Response & rhs) = default;
@@ -19,9 +18,7 @@ class Response : public Message {
   Response& operator=(const Response & rhs) = default;
   Response& operator=(Response && rhs) = default;
 
-  void setBody(const char * _body);
   void setStatusCode(int statusCode);
-  const char * getBody();
   HTTP_STATUS getStatusCode();
 };
 

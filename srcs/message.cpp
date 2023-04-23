@@ -36,3 +36,11 @@ size_t Message::getContentLength() {
 HTTP_METHOD Message::getMethod() {
   return method;
 }
+
+const char * Message::getBody() {
+  return body.c_str();
+}
+
+void Message::setBody(std::string _body) {
+  this->body = _body;
+}

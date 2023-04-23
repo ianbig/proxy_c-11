@@ -23,7 +23,7 @@ void validateResponseHeader(Header<std::string, std::string> headers) {
   assert(headers.get("Date") == "Fri, 22 Apr 2023 15:30:00 GMT");
   assert(headers.get("Server") == "Apache/2.4.18 (Ubuntu)");
   assert(headers.get("Last-Modified") == "Thu, 21 Apr 2023 12:00:00 GMT");
-  assert(headers.get("ETag") == "abcde12345");
+  assert(headers.get("ETag") == "\"abcde12345\"");
   assert(headers.get("Content-Length") == "512");
   assert(headers.get("Content-Type") == "text/html");
   assert(headers.get("Connection") == "close");
@@ -48,6 +48,7 @@ username=johndoe&password=1234\r\n";
 
   assert(strncmp(m->getHeader().get("Method").c_str(), "POST", 5) == 0);
   validateRequestHeader(m->getHeader());
+  assert(strcmp(m->getBody(), "username=johndoe&password=1234") == 0);
   std::cout << "request parsed success!!" << std::endl << std::endl;
 
   const char * http_response = "HTTP/1.1 200 OK\r\n\
@@ -58,18 +59,11 @@ ETag: \"abcde12345\"\r\n\
 Content-Length: 512\r\n\
 Content-Type: text/html\r\n\
 Connection: close\r\n\r\n\
-<!DOCTYPE html>\
-<html>\
-<head>\
-  <title>Welcome to Example.com</title>\
-</head>\
-<body>\
-  <h1>Welcome to Example.com</h1>\
-  <p>This is an example website.</p>\
-</body>\
-</html>\r\n";
+<!DOCTYPE html><html><head><title>Welcome to Example.com</title></head><body><h1>Welcome to Example.com</h1><p>This is an example website.</p></body></html>\r\n";
 
   ResponsePtr response = std::move(parser.parseResponse(http_response));
   assert(response->getStatusCode() == HTTP_STATUS::HTTP_OK);
+  validateResponseHeader(response->getHeader());
+  assert(strcmp(response->getBody(), "<!DOCTYPE html><html><head><title>Welcome to Example.com</title></head><body><h1>Welcome to Example.com</h1><p>This is an example website.</p></body></html>") == 0);
   std::cout << "response parsed success!!" << std::endl;
 }

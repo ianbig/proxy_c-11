@@ -32,7 +32,7 @@ class HttpParser {
   bool isValidHttpFormat(std::string firstLine);
   void parseHeader(MessagePtr msg, std::string http_msg);
   std::string extractHeader(std::string msg);
-  // void parseBody(MessageUniquePtr & msg, std::string http_msg);
+  void parseBody(MessagePtr msg, std::string http_msg);
   public:
   MessagePtr parseRequest(std::string http_msg);
   ResponsePtr parseResponse(std::string http_msg);

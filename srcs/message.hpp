@@ -11,6 +11,7 @@ class Message {
   protected:
   Header<std::string, std::string> http_headers;
   HTTP_METHOD method;
+  std::string body;
   public:
   Message() = default;
   virtual ~Message() = default;
@@ -26,6 +27,8 @@ class Message {
   Header<std::string, std::string> & getHeader();
   size_t getContentLength();
   HTTP_METHOD getMethod();
+  void setBody(std::string _body);
+  const char * getBody(); // easy for handling socket
 };
 
 #endif
