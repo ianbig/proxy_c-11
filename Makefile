@@ -22,4 +22,4 @@ response_test: $(SRCS_DIR)/header.hpp $(OBJS) $(TESTS_DIR)/response_test.cpp
 	$(CXX) $(CFLAGS) -c $<
 
 clean:
-	rm $(TEST_TARGETS) $(OBJS)
+	rm $(TEST_TARGETS) *.o
