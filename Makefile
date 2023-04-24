@@ -1,29 +1,33 @@
 CXX = g++
-CFLAGS = --std=c++14 -g
+CFLAGS = --std=c++14 -ggdb3
 SRCS_DIR = $(PWD)/srcs
 TESTS_DIR = $(PWD)/tests
 
 SRCS = $(wildcard $(SRCS_DIR)/*.cpp)
 OBJS = $(patsubst %.cpp, %.o, $(SRCS))
 
-TEST_TARGETS = header_test request_test response_test http_parser_test
+HDRS = $(SRCS_DIR)/header.hpp
+
+TEST_TARGETS = header_test request_test response_test http_parser_test get_test
 
 .PHONY: all clean
 
 all: $(TEST_TARGETS)
 	echo "complete code compliation"
 
-header_test: $(SRCS_DIR)/header.hpp $(TESTS_DIR)/header_test.cpp
+header_test: $(OBJS) $(HDRS)
 	$(CXX) -o $@ $(CFLAGS) $(TESTS_DIR)/header_test.cpp
-request_test: $(SRCS_DIR)/header.hpp $(OBJS) $(TESTS_DIR)/request_test.cpp
-	$(CXX) -o $@ $(CFLAGS) $(TESTS_DIR)/request_test.cpp $(OBJS)
-response_test: $(SRCS_DIR)/header.hpp $(OBJS) $(TESTS_DIR)/response_test.cpp
-	$(CXX) -o $@ $(CFLAGS) $(TESTS_DIR)/response_test.cpp $(OBJS)
-http_parser_test: $(SRCS_DIR)/header.hpp $(OBJS) $(TESTS_DIR)/http_parser_test.cpp
-	$(CXX) -o $@ $(CFLAGS) $(TESTS_DIR)/http_parser_test.cpp $(OBJS)
+request_test: $(OBJS) $(HDRS) $(TESTS_DIR)/request_test.cpp
+	$(CXX) -o $@ $(CFLAGS) $(OBJS) $(TESTS_DIR)/response_test.cpp
+response_test: $(OBJS) $(HDRS) $(TESTS_DIR)/response_test.cpp
+	$(CXX) -o $@ $(CFLAGS)  $(OBJS) $(TESTS_DIR)/response_test.cpp
+http_parser_test:$(OBJS) $(HDRS) $(TESTS_DIR)/http_parser_test.cpp
+	$(CXX) -o $@ $(CFLAGS) $(OBJS) $(TESTS_DIR)/http_parser_test.cpp
+get_test: $(OBJS) $(HDRS) $(TESTS_DIR)/get_test.cpp
+	$(CXX) -o $@ $(CFLAGS) $(OBJS) $(TESTS_DIR)/get_test.cpp
 
 %.o: $(SRCS_DIR)/%.cpp $(SRCS_DIR)/%.hpp
 	$(CXX) $(CFLAGS) -c $<
 
 clean:
-	rm $(TEST_TARGETS) *.o
+	rm $(TEST_TARGETS) $(SRCS_DIR)/*.o
