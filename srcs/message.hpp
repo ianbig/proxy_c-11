@@ -29,6 +29,7 @@ class Message {
   HTTP_METHOD getMethod();
   void setBody(std::string _body);
   const char * getBody(); // easy for handling socket
+  std::string getHost();
 };
 
 #endif

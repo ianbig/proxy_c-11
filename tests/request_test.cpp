@@ -11,6 +11,7 @@ int main() {
   g.setHeader("Method", "GET");
   g.setHeader("HOST", "www.google.com");
   g.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0");
+  g.setBody("I am Ian");
   
   assert(g.getContentLength() == 1000);
   assert(g.getHeader().get("HOST") == "www.google.com");

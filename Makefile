@@ -26,8 +26,8 @@ http_parser_test:$(OBJS) $(HDRS) $(TESTS_DIR)/http_parser_test.cpp
 get_test: $(OBJS) $(HDRS) $(TESTS_DIR)/get_test.cpp
 	$(CXX) -o $@ $(CFLAGS) $(OBJS) $(TESTS_DIR)/get_test.cpp
 
-%.o: $(SRCS_DIR)/%.cpp $(SRCS_DIR)/%.hpp
-	$(CXX) $(CFLAGS) -c $<
+$(SRCS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(SRCS_DIR)/%.hpp
+	$(CXX) -c $< $(CFLAGS) -o $@
 
 clean:
 	rm $(TEST_TARGETS) $(SRCS_DIR)/*.o

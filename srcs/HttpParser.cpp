@@ -103,10 +103,11 @@ const char * getNextAlphabetInStr(const char * str) {
 
 std::string HttpParser::extractHeader(std::string http_msg) {
   const char * http_msg_cstr = http_msg.c_str();
-  const char * start = strstr(http_msg_cstr, "\r\n") + strlen("\r\n");
+  const char * start = strstr(http_msg_cstr, "\r\n");
   if (start == NULL) { 
       throw InvalidHTTPFormat("Invalid Header");
-   }
+  }
+  start += strlen("\r\n");
 
   const char * end = strstr(start, "\r\n\r\n");
   if (end == NULL) { 
@@ -129,12 +130,22 @@ void HttpParser::parseBody(MessagePtr msg, std::string http_msg) {
   const char * start = strstr(http_msg_cstr, "\r\n\r\n");
   if (start == NULL) { return; }
   start += strlen("\r\n\r\n");
-  const char *end = strstr(start, "\r\n");
-  std::string body(start, end - start);
+
+  const char * ptr = start;
+  const char * line_end = NULL;
+  while ((line_end = strstr(ptr, "\n")) != NULL) {
+    ptr += (line_end - ptr) + 1;
+  }
+  
+  std::string body(start, ptr - start + 1);
   msg->setBody(body);
 }
 
 
 InvalidHTTPFormat::InvalidHTTPFormat(std::string _msg) : msg(_msg) {
   
+}
+
+const char * InvalidHTTPFormat::what() const noexcept {
+  return msg.c_str();
 }

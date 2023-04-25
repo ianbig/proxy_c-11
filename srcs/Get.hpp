@@ -15,6 +15,7 @@ class GetSocketException: public std::exception {
 
 class Get : public ConnectionInterface {
   private:
+  int socketfd;
   void setupConnection(const char * hostname, const char * port) override;
   public:
   void connectToHost(std::string hostname) override;

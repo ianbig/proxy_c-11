@@ -1,6 +1,8 @@
 #ifndef __connection_interface_hpp__
 #define __connection_interface_hpp__
 
+#define DEFAULT_MAX_SZ 1024
+
 #include <string>
 #include "response.hpp"
 #include "message.hpp"

@@ -16,6 +16,7 @@ class InvalidHTTPFormat: public std::exception {
   std::string msg;
   public:
   InvalidHTTPFormat(std::string msg);
+  const char * what() const noexcept;
 };
 
 using MessagePtr = std::shared_ptr<Message>;

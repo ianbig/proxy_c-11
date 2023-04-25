@@ -41,14 +41,15 @@ Connection: keep-alive\r\n\
 Upgrade-Insecure-Requests: 1\r\n\
 Content-Type: application/x-www-form-urlencoded\r\n\
 Content-Length: 27\r\n\r\n\
-username=johndoe&password=1234\r\n";
+username=johndoe&password=1234\n\
+apple\n";
 
   HttpParser parser;
-  MessagePtr m = std::move(parser.parseRequest(http_request));
+  MessagePtr m = parser.parseRequest(http_request);
 
   assert(strncmp(m->getHeader().get("Method").c_str(), "POST", 5) == 0);
   validateRequestHeader(m->getHeader());
-  assert(strcmp(m->getBody(), "username=johndoe&password=1234") == 0);
+  assert(strcmp(m->getBody(), "username=johndoe&password=1234\napple\n") == 0);
   std::cout << "request parsed success!!" << std::endl << std::endl;
 
   const char * http_response = "HTTP/1.1 200 OK\r\n\
@@ -59,11 +60,11 @@ ETag: \"abcde12345\"\r\n\
 Content-Length: 512\r\n\
 Content-Type: text/html\r\n\
 Connection: close\r\n\r\n\
-<!DOCTYPE html><html><head><title>Welcome to Example.com</title></head><body><h1>Welcome to Example.com</h1><p>This is an example website.</p></body></html>\r\n";
+<!DOCTYPE html><html><head><title>Welcome to Example.com</title></head><body><h1>Welcome to Example.com</h1><p>This is an example website.</p></body></html>\n";
 
-  ResponsePtr response = std::move(parser.parseResponse(http_response));
+  ResponsePtr response = parser.parseResponse(http_response);
   assert(response->getStatusCode() == HTTP_STATUS::HTTP_OK);
   validateResponseHeader(response->getHeader());
-  assert(strcmp(response->getBody(), "<!DOCTYPE html><html><head><title>Welcome to Example.com</title></head><body><h1>Welcome to Example.com</h1><p>This is an example website.</p></body></html>") == 0);
+  assert(strcmp(response->getBody(), "<!DOCTYPE html><html><head><title>Welcome to Example.com</title></head><body><h1>Welcome to Example.com</h1><p>This is an example website.</p></body></html>\n") == 0);
   std::cout << "response parsed success!!" << std::endl;
 }
