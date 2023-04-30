@@ -105,7 +105,7 @@ Response Get::recvFromHost() {
   char tmpBuf[DEFAULT_MAX_SZ];
   num_bytes_recv = strlen(r->getBody());
 
-  while (num_bytes_recv < response_sz) {
+  while (strstr(buf, "</html>") == NULL) {
     if ((cur_recv = recv(this->socketfd, tmpBuf, DEFAULT_MAX_SZ - 1, 0)) == -1) {
       throw GetSocketException("get recv: error on receving headers");
     }
@@ -119,7 +119,10 @@ Response Get::recvFromHost() {
       }
     }
     strncat(buf, tmpBuf, strlen(tmpBuf));
+    std::cout << num_bytes_recv << ", " << response_sz << std::endl;
   }
+
+  std::cout << buf << std::endl;
 
   r = parser.parseResponse(buf);
   free(buf);

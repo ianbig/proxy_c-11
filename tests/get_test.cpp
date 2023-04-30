@@ -8,8 +8,8 @@ int main() {
   std::unique_ptr<ConnectionInterface> connection = std::make_unique<Get>();
   try {
     std::string request =
-      "GET /cyberfair2004/C0412100064/profile.html HTTP/1.1\r\n\
-Host: library.taiwanschoolnet.org\r\n\
+      "GET /~fdc/sample.html HTTP/1.1\r\n\
+Host: www.columbia.edu\r\n\
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:95.0) Gecko/20100101 Firefox/95.0\r\n\
 Accept: */*\r\n\r\n";
     try {
