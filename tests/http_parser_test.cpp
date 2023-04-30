@@ -29,6 +29,14 @@ void validateResponseHeader(Header<std::string, std::string> headers) {
   assert(headers.get("Connection") == "close");
 }
 
+void validateGetRequest(Header<std::string, std::string> headers) {
+  assert(headers.get("Host") == "www.man7.org");
+  assert(headers.get("User-Agent") == "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:95.0) Gecko/20100101 Firefox/95.0");
+  assert(headers.get("Accept") == "*/*");
+  assert(headers.get("Accept-Encoding") == "gzip, deflate, br");
+  assert(headers.get("Connection") == "keep-alive");
+}
+
 
 int main() {
   const char * http_request = "POST /login.php HTTP/1.1\r\n\
@@ -40,7 +48,8 @@ Accept-Encoding: gzip, deflate, br\r\n\
 Connection: keep-alive\r\n\
 Upgrade-Insecure-Requests: 1\r\n\
 Content-Type: application/x-www-form-urlencoded\r\n\
-Content-Length: 27\r\n\r\n\
+Content-Length: 27\r\n\
+\r\n\
 username=johndoe&password=1234\n\
 apple\n";
 
@@ -50,6 +59,18 @@ apple\n";
   assert(strncmp(m->getHeader().get("Method").c_str(), "POST", 5) == 0);
   validateRequestHeader(m->getHeader());
   assert(strcmp(m->getBody(), "username=johndoe&password=1234\napple\n") == 0);
+  assert(strcmp(m->getMessage(), http_request) == 0);
+
+  std::string get_request =
+      "GET /linux/man-pages/man2/recv.2.html HTTP/1.1\r\n\
+Host: www.man7.org\r\n\
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:95.0) Gecko/20100101 Firefox/95.0\r\n\
+Accept: */*\r\n\
+Accept-Encoding: gzip, deflate, br\r\n\
+Connection: keep-alive\r\n\r\n";
+  MessagePtr get_m = parser.parseRequest(get_request);
+  validateGetRequest(get_m->getHeader());
+
   std::cout << "request parsed success!!" << std::endl << std::endl;
 
   const char * http_response = "HTTP/1.1 200 OK\r\n\
@@ -65,6 +86,7 @@ Connection: close\r\n\r\n\
   ResponsePtr response = parser.parseResponse(http_response);
   assert(response->getStatusCode() == HTTP_STATUS::HTTP_OK);
   validateResponseHeader(response->getHeader());
-  assert(strcmp(response->getBody(), "<!DOCTYPE html><html><head><title>Welcome to Example.com</title></head><body><h1>Welcome to Example.com</h1><p>This is an example website.</p></body></html>\n") == 0);
+  assert(strcmp(response->getMessage(), http_response) == 0);
+
   std::cout << "response parsed success!!" << std::endl;
 }

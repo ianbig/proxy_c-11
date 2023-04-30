@@ -1,19 +1,15 @@
 #include "message.hpp"
 
+Message::Message(const char * msg) : raw(msg) {
+
+}
 
 Message::Message(HTTP_METHOD _method) : method(_method) {
   
 }
 
-std::string Message::getMessage() {
-  std::string res = "";
-  for (auto it = http_headers.begin(); it != http_headers.end(); it++) {
-    res += it->first + ": " + it->second + "\r\n";
-  }
-
-  res += "\r\n\r\n" + this->body;
-
-  return res;
+const char * Message::getMessage() {
+  return raw.c_str();
 }
 
 /**
@@ -50,4 +46,8 @@ void Message::setBody(std::string _body) {
 
 std::string Message::getHost() {
   return this->getHeader().get("Host");
+}
+
+void Message::setRaw(std::string _raw) {
+  this->raw = _raw;
 }

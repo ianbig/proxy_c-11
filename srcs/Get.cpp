@@ -69,9 +69,9 @@ void Get::setupConnection(const char * hostname, const char * port) {
 
 
 void Get::sendToHost(Message msg) {
-  std::string msg_to_send_str = msg.getMessage();
-  const char * msg_to_send = msg_to_send_str.c_str();
-  size_t bytes_to_sent = msg.getMessage().size();
+  const char * msg_to_send = msg.getMessage();
+  std::cout << msg_to_send;
+  size_t bytes_to_sent = strlen(msg_to_send);
   size_t cur_send_bytes = -1;
   while ((msg_to_send && bytes_to_sent > 0) && (cur_send_bytes = send(this->socketfd, msg_to_send, bytes_to_sent, 0)) != -1) {
     bytes_to_sent -= cur_send_bytes;
@@ -93,29 +93,34 @@ Response Get::recvFromHost() {
   HttpParser parser;
   ResponsePtr r = parser.parseResponse(buf);
   size_t response_sz = -1;
+
   try {
-    // TODO: minus something here
-    size_t header_sz = r->getMessage().size() - r->getContentLength();
-    response_sz = r->getContentLength() + header_sz;
+    response_sz = r->getContentLength();
   } catch (FieldNotFoundException<std::string> & e) {
-    // TODO: if no content length
+
   }
 
   size_t cur_recv = -1;
   size_t max_bytes = DEFAULT_MAX_SZ;
   char tmpBuf[DEFAULT_MAX_SZ];
+  num_bytes_recv = strlen(r->getBody());
+
   while (num_bytes_recv < response_sz) {
     if ((cur_recv = recv(this->socketfd, tmpBuf, DEFAULT_MAX_SZ - 1, 0)) == -1) {
       throw GetSocketException("get recv: error on receving headers");
     }
     tmpBuf[cur_recv] = '\0';
     num_bytes_recv += cur_recv;
-    if (num_bytes_recv >= max_bytes) {
+    while ((strlen(buf) + cur_recv) >= max_bytes) {
       max_bytes *= 2;
       buf = (char*)realloc(buf, sizeof(*buf) * max_bytes);
+      if (buf == NULL) {
+        throw GetSocketException("internal realloc error");
+      }
     }
-    strcat(buf, tmpBuf);
+    strncat(buf, tmpBuf, strlen(tmpBuf));
   }
+
   r = parser.parseResponse(buf);
   free(buf);
 
