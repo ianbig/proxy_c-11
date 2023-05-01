@@ -19,6 +19,10 @@ const char * GetSocketException::what() const noexcept {
   return this->msg.c_str();
 }
 
+Get::~Get() {
+  close(socketfd);
+}
+
 void Get::connectToHost(std::string hostname) {
   size_t hostNameEndIndex = hostname.find(":");
   std::string host = hostname;
@@ -91,11 +95,11 @@ Response Get::recvFromHost() {
   }
   buf[num_bytes_recv] = '\0';
   HttpParser parser;
-  ResponsePtr r = parser.parseResponse(buf);
+  Response r = parser.parseResponse(buf);
   size_t response_sz = -1;
 
   try {
-    response_sz = r->getContentLength();
+    response_sz = r.getContentLength();
   } catch (FieldNotFoundException<std::string> & e) {
 
   }
@@ -103,7 +107,7 @@ Response Get::recvFromHost() {
   size_t cur_recv = -1;
   size_t max_bytes = DEFAULT_MAX_SZ;
   char tmpBuf[DEFAULT_MAX_SZ];
-  num_bytes_recv = strlen(r->getBody());
+  num_bytes_recv = strlen(r.getBody());
 
   while (strstr(buf, "</html>") == NULL) {
     if ((cur_recv = recv(this->socketfd, tmpBuf, DEFAULT_MAX_SZ - 1, 0)) == -1) {
@@ -119,13 +123,10 @@ Response Get::recvFromHost() {
       }
     }
     strncat(buf, tmpBuf, strlen(tmpBuf));
-    std::cout << num_bytes_recv << ", " << response_sz << std::endl;
   }
-
-  std::cout << buf << std::endl;
 
   r = parser.parseResponse(buf);
   free(buf);
 
-  return *r;
+  return r;
 }

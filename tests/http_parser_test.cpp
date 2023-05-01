@@ -54,7 +54,8 @@ username=johndoe&password=1234\n\
 apple\n";
 
   HttpParser parser;
-  MessagePtr m = parser.parseRequest(http_request);
+  Message msg = parser.parseRequest(http_request);
+  std::unique_ptr<Message> m = std::make_unique<Message>(msg);
 
   assert(strncmp(m->getHeader().get("Method").c_str(), "POST", 5) == 0);
   validateRequestHeader(m->getHeader());
@@ -68,7 +69,8 @@ User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:95.0) Gecko/2010010
 Accept: */*\r\n\
 Accept-Encoding: gzip, deflate, br\r\n\
 Connection: keep-alive\r\n\r\n";
-  MessagePtr get_m = parser.parseRequest(get_request);
+  Message resp = parser.parseRequest(get_request);
+  std::unique_ptr<Message> get_m = std::make_unique<Message>(resp);
   validateGetRequest(get_m->getHeader());
 
   std::cout << "request parsed success!!" << std::endl << std::endl;
@@ -83,10 +85,10 @@ Content-Type: text/html\r\n\
 Connection: close\r\n\r\n\
 <!DOCTYPE html><html><head><title>Welcome to Example.com</title></head><body><h1>Welcome to Example.com</h1><p>This is an example website.</p></body></html>\n";
 
-  ResponsePtr response = parser.parseResponse(http_response);
-  assert(response->getStatusCode() == HTTP_STATUS::HTTP_OK);
-  validateResponseHeader(response->getHeader());
-  assert(strcmp(response->getMessage(), http_response) == 0);
+  Response response = parser.parseResponse(http_response);
+  assert(response.getStatusCode() == HTTP_STATUS::HTTP_OK);
+  validateResponseHeader(response.getHeader());
+  assert(strcmp(response.getMessage(), http_response) == 0);
 
   std::cout << "response parsed success!!" << std::endl;
 }

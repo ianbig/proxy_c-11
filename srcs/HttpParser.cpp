@@ -6,16 +6,16 @@
 #include "HttpParser.hpp"
 #include "response.hpp"
 
-MessagePtr HttpParser::parseRequest(std::string http_msg) {
-  MessagePtr toRet = this->parseRequestStartLine(http_msg);
+Message HttpParser::parseRequest(std::string http_msg) {
+  Message toRet = this->parseRequestStartLine(http_msg);
   this->parseHeader(toRet, http_msg);
   this->parseBody(toRet, http_msg);
-  toRet->setRaw(http_msg);
+  toRet.setRaw(http_msg);
   
   return toRet;
 }
 
-MessagePtr HttpParser::parseRequestStartLine(std::string http_msg) {
+Message HttpParser::parseRequestStartLine(std::string http_msg) {
   size_t end = http_msg.find("\r\n");
   std::string firstLine = http_msg.substr(0, end);
 
@@ -23,21 +23,21 @@ MessagePtr HttpParser::parseRequestStartLine(std::string http_msg) {
       throw InvalidHTTPFormat("Invalid HTTP Request Format");
   }
 
-  MessagePtr msg = std::make_shared<Message>();
-  msg->setHeader("Method", extractMethod(firstLine));
+  Message msg;
+  msg.setHeader("Method", extractMethod(firstLine));
   return msg;
 }
 
-ResponsePtr HttpParser::parseResponse(std::string http_msg) {
-  ResponsePtr response = this->parseResponseStartLine(http_msg);
+Response HttpParser::parseResponse(std::string http_msg) {
+  Response response = this->parseResponseStartLine(http_msg);
   this->parseHeader(response, http_msg);
   this->parseBody(response, http_msg);
-  response->setRaw(http_msg);
+  response.setRaw(http_msg);
   
   return response;
 }
 
-ResponsePtr HttpParser::parseResponseStartLine(std::string http_msg) {
+Response HttpParser::parseResponseStartLine(std::string http_msg) {
   size_t end = http_msg.find("\r\n");
   std::string firstLine = http_msg.substr(0, end);
 
@@ -45,9 +45,9 @@ ResponsePtr HttpParser::parseResponseStartLine(std::string http_msg) {
     throw InvalidHTTPFormat("Invalid HTTP Response");
   }
 
-  ResponsePtr msg = std::make_shared<Response>();
+  Response msg;
   int code = extractedCode(firstLine);
-  msg->setStatusCode(code);
+  msg.setStatusCode(code);
   return msg;
 }
 
@@ -79,7 +79,7 @@ std::string HttpParser::extractMethod(std::string firstLine) {
   return first_field;
 }
 
-void HttpParser::parseHeader(MessagePtr msg, std::string http_msg) {
+void HttpParser::parseHeader(Message & msg, std::string http_msg) {
   const char * http_msg_cstr = http_msg.c_str();
   const char * start = strstr(http_msg_cstr, "\r\n");
   if (start == NULL) { 
@@ -91,7 +91,7 @@ void HttpParser::parseHeader(MessagePtr msg, std::string http_msg) {
   while ((line_end = strstr(start, "\r\n")) != NULL && (start != line_end)) {
     std::string field = extractFieldInLine(start);
     std::string value = extractValueInLine(start);
-    msg->setHeader(field, value);
+    msg.setHeader(field, value);
     start = line_end + strlen("\r\n");
   }
 }
@@ -133,7 +133,7 @@ const char * skipSpace(const char * start) {
   return start;
 }
 
-void HttpParser::parseBody(MessagePtr msg, std::string http_msg) {
+void HttpParser::parseBody(Message & msg, std::string http_msg) {
   const char * http_msg_cstr = http_msg.c_str();
   const char * start = strstr(http_msg_cstr, "\r\n\r\n");
   if (start == NULL) { return; }
@@ -141,12 +141,12 @@ void HttpParser::parseBody(MessagePtr msg, std::string http_msg) {
 
   const char * ptr = start;
   const char * line_end = NULL;
-  while ((line_end = strstr(ptr, "\r\n")) != NULL) {
+  while ((line_end = strstr(ptr, "\n")) != NULL) {
     ptr += (line_end - ptr) + 1;
   }
   
   std::string body(start, ptr - start + 1);
-  msg->setBody(body);
+  msg.setBody(body);
 }
 
 

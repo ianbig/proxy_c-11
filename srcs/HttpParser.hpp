@@ -19,25 +19,22 @@ class InvalidHTTPFormat: public std::exception {
   const char * what() const noexcept;
 };
 
-using MessagePtr = std::shared_ptr<Message>;
-using ResponsePtr = std::shared_ptr<Response>;
-
 class HttpParser {
   private:
-  MessagePtr parseRequestStartLine(std::string http_msg);
-  ResponsePtr parseResponseStartLine(std::string http_msg);
+  Message parseRequestStartLine(std::string http_msg);
+  Response parseResponseStartLine(std::string http_msg);
   bool isResponse(std::string firstLine);
   bool isRequest(std::string method);
   int extractedCode(std::string firstLine);
   std::string extractMethod(std::string firstLine);
   bool isValidHttpFormat(std::string firstLine);
-  void parseHeader(MessagePtr msg, std::string http_msg);
+  void parseHeader(Message & msg, std::string http_msg);
   std::string extractFieldInLine(const char * line);
   std::string extractValueInLine(const char * line);
-  void parseBody(MessagePtr msg, std::string http_msg);
+  void parseBody(Message & msg, std::string http_msg);
   public:
-  MessagePtr parseRequest(std::string http_msg);
-  ResponsePtr parseResponse(std::string http_msg);
+  Message parseRequest(std::string http_msg);
+  Response parseResponse(std::string http_msg);
 };
 
 #endif

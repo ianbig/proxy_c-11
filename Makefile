@@ -8,7 +8,7 @@ OBJS = $(patsubst %.cpp, %.o, $(SRCS))
 
 HDRS = $(SRCS_DIR)/header.hpp
 
-TEST_TARGETS = header_test request_test response_test http_parser_test get_test
+TEST_TARGETS = header_test request_test response_test http_parser_test
 
 .PHONY: all clean
 
@@ -30,4 +30,4 @@ $(SRCS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(SRCS_DIR)/%.hpp
 	$(CXX) -c $< $(CFLAGS) -o $@
 
 clean:
-	rm $(TEST_TARGETS) $(SRCS_DIR)/*.o
+	rm -r -f $(TEST_TARGETS) $(SRCS_DIR)/*.o *.dSYM

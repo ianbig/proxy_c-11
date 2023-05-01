@@ -17,7 +17,9 @@ class Get : public ConnectionInterface {
   private:
   int socketfd;
   void setupConnection(const char * hostname, const char * port) override;
+  // std::string getByContentLength();
   public:
+  ~Get();
   void connectToHost(std::string hostname) override;
   void sendToHost(Message msg) override;
   Response recvFromHost() override;
